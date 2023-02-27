@@ -16,6 +16,8 @@ namespace App.Test
             var a = new User();
             var b = new Person();
             b.User = a;
+            var c = new Context();
+            //c.People.Add(b);
             Assert.NotNull(b);
         }
     }
