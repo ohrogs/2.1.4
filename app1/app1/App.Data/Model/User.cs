@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace App.Domain.Model
+namespace App.Data.Model
 {
-    internal class User
+    public class User
     {
         int ID { get; set; }
         string Nickname { get; set; }

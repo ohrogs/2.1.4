@@ -1,3 +1,5 @@
+using App.Data.Model;
+
 namespace App.Test
 {
     public class Tests
@@ -5,12 +7,16 @@ namespace App.Test
         [SetUp]
         public void Setup()
         {
+
         }
 
         [Test]
         public void Test1()
         {
-            Assert.Pass();
+            var a = new User();
+            var b = new Person();
+            b.User = a;
+            Assert.NotNull(b);
         }
     }
 }

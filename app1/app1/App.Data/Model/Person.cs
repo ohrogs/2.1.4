@@ -6,9 +6,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace App.Domain.Model
+namespace App.Data.Model
 {
-    internal class Pearson
+    public class Person
     {
         int ID { get; set; }
         string Name { get; set; }
