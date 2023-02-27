@@ -1,0 +1,46 @@
+USE [APP.DATABASE]
+GO
+/****** Object:  User [APP.USER]    Script Date: 27/02/2023 12:59:10 ******/
+CREATE USER [APP.USER] FOR LOGIN [APP.USER] WITH DEFAULT_SCHEMA=[dbo]
+GO
+ALTER ROLE [db_datareader] ADD MEMBER [APP.USER]
+GO
+ALTER ROLE [db_datawriter] ADD MEMBER [APP.USER]
+GO
+/****** Object:  Table [dbo].[people]    Script Date: 27/02/2023 12:59:10 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[people](
+	[ID] [int] IDENTITY(1,1) NOT NULL,
+	[NAME] [varchar](50) NOT NULL,
+	[SURNAME] [varchar](50) NOT NULL,
+	[BIRTHDATE] [date] NOT NULL,
+	[CF] [varchar](16) NULL,
+	[EMAIL] [varchar](100) NULL,
+	[IDUSER] [int] NOT NULL
+) ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[users]    Script Date: 27/02/2023 12:59:10 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[users](
+	[ID] [int] IDENTITY(1,1) NOT NULL,
+	[NICKNAME] [varchar](50) NOT NULL,
+	[PASSWORD] [varchar](20) NOT NULL,
+	[HASH] [varchar](50) NOT NULL,
+	[SALT] [varchar](50) NOT NULL,
+ CONSTRAINT [PK_users] PRIMARY KEY CLUSTERED 
+(
+	[ID] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+ALTER TABLE [dbo].[people]  WITH CHECK ADD  CONSTRAINT [FK_user_people] FOREIGN KEY([IDUSER])
+REFERENCES [dbo].[users] ([ID])
+GO
+ALTER TABLE [dbo].[people] CHECK CONSTRAINT [FK_user_people]
+GO
