@@ -35,13 +35,13 @@ namespace App.Domain.Model
         public User Get() {
             using (var context = new Data.Model.Context())
             {
-                var ExtentionMethod = context.Users.SingleOrDefault(u => u.ID == ID);
+                var user = context.Users.SingleOrDefault(u => u.ID == ID);
 
                 /*var QueryLang = from p in context.People
                                 where p.Id > 6
                                 select p;*/
 
-                return ExtentionMethod;
+                return new User(user);
             }
         }
         public IResult Create() {
