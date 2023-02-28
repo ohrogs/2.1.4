@@ -12,6 +12,14 @@ namespace App.Domain.Model
         public int ID { get; set; }
         public string Nickname { get; set; }
 
+        public User() { }
+
+        public User(Data.Model.User user) 
+        {
+            ID = user.ID;
+            Nickname = user.Nickname;
+        }
+
         public List<User> Select() {
             throw new NotImplementedException();
         }

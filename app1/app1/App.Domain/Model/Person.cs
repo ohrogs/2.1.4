@@ -17,6 +17,8 @@ namespace App.Domain.Model
         public string Email { get; set; }
         public int Iduser { get; set; }
 
+        public User user { get; set; }
+
         public Person() { }
 
         public Person(Data.Model.Person person) {
@@ -25,6 +27,7 @@ namespace App.Domain.Model
             Cf = person.Cf;
             Email = person.Email;
             Iduser = person.Iduser;
+            user = new User(person.User);
 
         }
 
