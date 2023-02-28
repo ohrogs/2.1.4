@@ -16,10 +16,28 @@ namespace App.Domain.Model
         public string Cf { get; set; }
         public string Email { get; set; }
         public int Iduser { get; set; }
+
+        public Person() { }
+
+        public Person(Data.Model.Person person) {
+            Name = person.Name;
+            Birthdate = person.Birthdate;
+            Cf = person.Cf;
+            Email = person.Email;
+            Iduser = person.Iduser;
+
+        }
+
         public List<Person> Select() {
-            using(var context = new App.Data.Model.Context())
+            using(var context = new Data.Model.Context())
             {
                 var ExtentionMethod = context.People.Select(p => new Person());
+
+                /*var QueryLang = from p in context.People
+                                where p.Id > 6
+                                select p;*/
+
+                return ExtentionMethod.ToList();
             }
         }
         public Person Get(){
