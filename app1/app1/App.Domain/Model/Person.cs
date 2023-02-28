@@ -44,7 +44,16 @@ namespace App.Domain.Model
             }
         }
         public Person Get(){
-            throw new NotImplementedException();
+            using (var context = new Data.Model.Context())
+            {
+                var person = context.People.SingleOrDefault(p => p.ID == ID);
+
+                /*var QueryLang = from p in context.People
+                                where p.Id > 6
+                                select p;*/
+
+                return new Person(person);
+            }
         }
         public IResult Create() {
             throw new NotImplementedException();

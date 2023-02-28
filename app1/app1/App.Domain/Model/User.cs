@@ -21,10 +21,28 @@ namespace App.Domain.Model
         }
 
         public List<User> Select() {
-            throw new NotImplementedException();
+            using (var context = new Data.Model.Context())
+            {
+                var ExtentionMethod = context.Users.Select(u => new User(u));
+
+                /*var QueryLang = from p in context.People
+                                where p.Id > 6
+                                select p;*/
+
+                return ExtentionMethod.ToList();
+            }
         }
         public User Get() {
-            throw new NotImplementedException();
+            using (var context = new Data.Model.Context())
+            {
+                var ExtentionMethod = context.Users.SingleOrDefault(u => u.ID == ID);
+
+                /*var QueryLang = from p in context.People
+                                where p.Id > 6
+                                select p;*/
+
+                return ExtentionMethod;
+            }
         }
         public IResult Create() {
             throw new NotImplementedException();
