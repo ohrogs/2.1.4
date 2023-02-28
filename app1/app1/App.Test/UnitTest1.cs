@@ -1,5 +1,5 @@
 using App.Data.Model;
-
+//lorenzomari
 namespace App.Test
 {
     public class Tests
@@ -11,14 +11,32 @@ namespace App.Test
         }
 
         [Test]
-        public void Test1()
+        public void CreateContext()
         {
-            var a = new User();
-            var b = new Person();
-            b.User = a;
-            var c = new Context();
+            var ctx = new Context();
+            User user = new User()
+            {
+                Nickname = "Test",
+                //ID = 1,
+                Salt = "Test",
+                Hash = "Test",
+            };
+            Person person = new Person()
+            {
+                User = user,
+                Name = "Test",
+                Surname = "Test",
+                Iduser = user.ID,
+                Email = "Test",
+                //ID = 1,
+            };
+            ctx.Users.Add(user);
+            ctx.People.Add(person);
+            ctx.SaveChanges();
+            var plist = ctx.People.ToList();
             //c.People.Add(b);
-            Assert.NotNull(b);
+            Assert.NotNull(plist);
         }
     }
 }
+//lorenzomari

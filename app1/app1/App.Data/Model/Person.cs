@@ -8,19 +8,30 @@ using System.Threading.Tasks;
 
 namespace App.Data.Model
 {
+    [Table("people")]
     public class Person
     {
-        int ID { get; set; }
-        string Name { get; set; }
-        string Surname { get; set; }
-        DateOnly Birthdate { get; set; }
+        [Key]
+        [Column("ID")]
+        [Required]
+        public int ID { get; set; }
+        [Column("NAME")]
+        public string Name { get; set; }
+        [Column("SURNAME")]
+        public string Surname { get; set; }
+        [Column("BIRTHDATE")]
+        public DateTime? Birthdate { get; set; }
 
+        [Column("CF")]
         [MaxLength(16)]
-        string Cf { get; set; }
+        public string Cf { get; set; }
 
-        string Email { get; set; }
+        [Column("EMAIL")]
+        [Required]
+        public string Email { get; set; }
 
-        int Iduser { get; set; }
+        [Column("IDUSER")]
+        public int Iduser { get; set; }
 
         [ForeignKey(nameof(Iduser))]
         public virtual User User { get; set; }

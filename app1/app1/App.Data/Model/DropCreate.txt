@@ -1,13 +1,26 @@
 USE [APP.DATABASE]
 GO
-/****** Object:  User [APP.USER]    Script Date: 28/02/2023 12:19:03 ******/
+ALTER TABLE [dbo].[people] DROP CONSTRAINT [FK_user_people]
+GO
+/****** Object:  Table [dbo].[users]    Script Date: 28/02/2023 12:20:04 ******/
+IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[users]') AND type in (N'U'))
+DROP TABLE [dbo].[users]
+GO
+/****** Object:  Table [dbo].[people]    Script Date: 28/02/2023 12:20:04 ******/
+IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[people]') AND type in (N'U'))
+DROP TABLE [dbo].[people]
+GO
+/****** Object:  User [APP.USER]    Script Date: 28/02/2023 12:20:04 ******/
+DROP USER [APP.USER]
+GO
+/****** Object:  User [APP.USER]    Script Date: 28/02/2023 12:20:04 ******/
 CREATE USER [APP.USER] FOR LOGIN [APP.USER] WITH DEFAULT_SCHEMA=[dbo]
 GO
 ALTER ROLE [db_datareader] ADD MEMBER [APP.USER]
 GO
 ALTER ROLE [db_datawriter] ADD MEMBER [APP.USER]
 GO
-/****** Object:  Table [dbo].[people]    Script Date: 28/02/2023 12:19:03 ******/
+/****** Object:  Table [dbo].[people]    Script Date: 28/02/2023 12:20:04 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -22,7 +35,7 @@ CREATE TABLE [dbo].[people](
 	[IDUSER] [int] NOT NULL
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[users]    Script Date: 28/02/2023 12:19:03 ******/
+/****** Object:  Table [dbo].[users]    Script Date: 28/02/2023 12:20:04 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
