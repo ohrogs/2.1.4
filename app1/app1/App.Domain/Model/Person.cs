@@ -21,7 +21,8 @@ namespace App.Domain.Model
 
         public Person() { }
 
-        public Person(Data.Model.Person person) {
+        public Person(Data.Model.Person person)
+        {
             Name = person.Name;
             Birthdate = person.Birthdate;
             Cf = person.Cf;
@@ -31,8 +32,9 @@ namespace App.Domain.Model
 
         }
 
-        public List<Person> Select() {
-            using(var context = new Data.Model.Context())
+        public List<Person> Select()
+        {
+            using (var context = new Data.Model.Context())
             {
                 var ExtentionMethod = context.People.Select(p => new Person());
 
@@ -43,7 +45,8 @@ namespace App.Domain.Model
                 return ExtentionMethod.ToList();
             }
         }
-        public Person Get(){
+        public Person Get()
+        {
             using (var context = new Data.Model.Context())
             {
                 var person = context.People.SingleOrDefault(p => p.ID == ID);
@@ -55,13 +58,59 @@ namespace App.Domain.Model
                 return new Person(person);
             }
         }
-        public IResult Create() {
+        public IResult Create()
+        {
+            using (var context = new Data.Model.Context())
+            {
+
+                Data.Model.Person DtoPerson = new Data.Model.Person()
+                {
+                    Name = this.Name,
+                    Birthdate = this.Birthdate,
+                    Cf = this.Cf,
+                    Email = this.Email,
+                };
+
+                DtoPerson.User = new Data.Model.User()
+                {
+                    Nickname = this.user.Nickname,
+                    Salt = "gang3",
+                    Hash = "hash3",
+                };
+
+                context.People.Add(DtoPerson);
+
+                context.SaveChanges();
+            }
+
             throw new NotImplementedException();
         }
-        public IResult Update() {
+        public IResult Update()
+        {
+            using (var context = new Data.Model.Context())
+            {
+                Data.Model.Person DtoPerson = context.People.Where(p => p.ID == ID).SingleOrDefault();
+                DtoPerson.Name = this.Name;
+                DtoPerson.Birthdate = this.Birthdate;
+                DtoPerson.Cf = this.Cf;
+                DtoPerson.Email = this.Email;
+                DtoPerson.Iduser = this.Iduser;
+                //DtoPerson.User = context.Users.Where(u => u.ID == this.Iduser).SingleOrDefault();
+
+                context.People.Update(DtoPerson);
+                context.SaveChanges();
+            }
             throw new NotImplementedException();
         }
-        public IResult Delete() {
+        public IResult Delete()
+        {
+            using (var context = new Data.Model.Context())
+            {
+                Data.Model.Person DtoPerson = context.People.Where(p => p.ID == ID).SingleOrDefault();
+
+                context.People.Remove(DtoPerson);
+                context.SaveChanges();
+            }
             throw new NotImplementedException();
         }
     }
