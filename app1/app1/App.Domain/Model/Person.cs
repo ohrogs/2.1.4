@@ -1,4 +1,5 @@
-﻿using App.Domain.Interfaces;
+﻿using App.Domain.Core;
+using App.Domain.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -60,30 +61,38 @@ namespace App.Domain.Model
         }
         public IResult Create()
         {
-            using (var context = new Data.Model.Context())
+            try
+            {
+                if (user == null)
+                    return new Result(ResultType.Failure, "user cant be null");
+                using (var context = new Data.Model.Context())
+                {
+
+                    Data.Model.Person DtoPerson = new()
+                    {
+                        Name = this.Name,
+                        Birthdate = this.Birthdate,
+                        Cf = this.Cf,
+                        Email = this.Email,
+                        User = new Data.Model.User()
+                        {
+                            Nickname = this.user.Nickname,
+                            Salt = "gang3",
+                            Hash = "hash3",
+                        }
+                    };
+
+                    context.People.Add(DtoPerson);
+
+                    context.SaveChanges();
+                    return new Result(ResultType.Success);
+                }
+            }
+            catch (Exception e)
             {
 
-                Data.Model.Person DtoPerson = new Data.Model.Person()
-                {
-                    Name = this.Name,
-                    Birthdate = this.Birthdate,
-                    Cf = this.Cf,
-                    Email = this.Email,
-                };
-
-                DtoPerson.User = new Data.Model.User()
-                {
-                    Nickname = this.user.Nickname,
-                    Salt = "gang3",
-                    Hash = "hash3",
-                };
-
-                context.People.Add(DtoPerson);
-
-                context.SaveChanges();
+                return new Result(ResultType.Error, e);
             }
-
-            throw new NotImplementedException();
         }
         public IResult Update()
         {
