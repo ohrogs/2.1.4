@@ -8,6 +8,9 @@ namespace App.Domain.Core
 {
     public enum ResultType
     {
-        Ok,
+        Success,
+        Failure,
+        Error,
+        Undefined
     }
 }
