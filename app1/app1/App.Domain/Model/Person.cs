@@ -1,4 +1,5 @@
-﻿using App.Domain.Core;
+﻿using App.Data.Model;
+using App.Domain.Core;
 using App.Domain.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -33,7 +34,38 @@ namespace App.Domain.Model
 
         }
 
-        public List<Person> Select()
+        public IResult<List<Person>> Select()
+        {
+            using (var context = new Data.Model.Context())
+            {
+                try
+                {
+                    /*if (ID == 0)
+                    {
+                        //return new Result(ResultType.Failure, "ID must be != 0");
+                        throw new KeyNotFoundException("Id must not be 0");
+                    }*/
+                    var ExtentionMethod = context.People.Select(p => new Person());
+
+                    /*var QueryLang = from p in context.People
+                                    where p.Id > 6
+                                    select p;*/
+                    if (ExtentionMethod == null)
+                    {
+                        return new Result<List<Person>>(ResultType.Failure, "no person found with that id");
+                    }
+
+                    return new Result<List<Person>>(ResultType.Success, ExtentionMethod.ToList());
+
+                }
+                catch (Exception e)
+                {
+
+                    return new Result<List<Person>>(ResultType.Error, e);
+                }
+            }
+        }
+        public IResult<Person> Get()
         {
             using (var context = new Data.Model.Context())
             {
@@ -41,43 +73,25 @@ namespace App.Domain.Model
                 {
                     if (ID == 0)
                     {
-                        //return new Result(ResultType.Failure, "ID must be != 0");
-                        throw new KeyNotFoundException("Id must not be 0");
+                        return new Result<Person>(ResultType.Failure, "id cant be 0");
                     }
-                    var ExtentionMethod = context.People.Select(p => new Person());
-
-                    /*var QueryLang = from p in context.People
-                                    where p.Id > 6
-                                    select p;*/
-
-                    return ExtentionMethod.ToList();
-
-                }
-                catch (Exception e)
-                {
-
-                    throw e;
-                }
-            }
-        }
-        public IResult Get()
-        {
-            using (var context = new Data.Model.Context())
-            {
-                try
-                {
                     var person = context.People.SingleOrDefault(p => p.ID == ID);
 
                     /*var QueryLang = from p in context.People
                                     where p.Id > 6
                                     select p;*/
 
-                    return new Result(ResultType.Success, new Person(person));
+                    if(person == null)
+                    {
+                        return new Result<Person>(ResultType.Failure, "no person found with that id");
+                    }
+
+                    return new Result<Person>(ResultType.Success, new Person(person));
 
                 }
                 catch (Exception e)
                 {
-                    return new Result(ResultType.Error, e);
+                    return new Result<Person>(ResultType.Error, e);
                 }
             }
         }

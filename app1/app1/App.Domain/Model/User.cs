@@ -1,4 +1,5 @@
-﻿using App.Domain.Interfaces;
+﻿using App.Domain.Core;
+using App.Domain.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -22,29 +23,50 @@ namespace App.Domain.Model
             Nickname = user.Nickname;
         }
 
-        public List<User> Select()
+        public IResult<List<User>> Select()
         {
-            using (var context = new Data.Model.Context())
+            try
             {
-                var ExtentionMethod = context.Users.Select(u => new User(u));//needed for type conversion
-                /*var QueryLang = from p in context.People
-                                where p.Id > 6
-                                select p;*/
+                using (var context = new Data.Model.Context())
+                {
+                    var ExtentionMethod = context.Users.Select(u => new User(u));//needed for type conversion
+                    /*var QueryLang = from p in context.People
+                                    where p.Id > 6
+                                    select p;*/
 
-                return ExtentionMethod.ToList();
+                    if(ExtentionMethod == null)
+                    {
+                        return new Result<List<User>>(ResultType.Failure, "no bitches?");
+                    }
+
+                    return new Result<List<User>>(ResultType.Success, ExtentionMethod.ToList());
+                }
+            }
+            catch (Exception e)
+            {
+
+                return new Result<List<User>>(ResultType.Error, e);
             }
         }
-        public User Get()
+        public IResult<User> Get()
         {
-            using (var context = new Data.Model.Context())
+            try
             {
-                var user = context.Users.SingleOrDefault(u => u.ID == ID);
+                using (var context = new Data.Model.Context())
+                {
+                    var user = context.Users.SingleOrDefault(u => u.ID == ID);
 
-                /*var QueryLang = from p in context.People
-                                where p.Id > 6
-                                select p;*/
+                    /*var QueryLang = from p in context.People
+                                    where p.Id > 6
+                                    select p;*/
 
-                return user == null ? null : new User(user);
+                    return new Result<User>(ResultType.Success, user == null ? null : new User(user));
+                }
+            }
+            catch (Exception e)
+            {
+
+                return new Result<User>(ResultType.Error, e);
             }
         }
         public IResult Create()

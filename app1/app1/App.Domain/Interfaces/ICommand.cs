@@ -6,10 +6,10 @@ using System.Threading.Tasks;
 
 namespace App.Domain.Interfaces
 {
-    public interface ICommand<E> where E : IEntity
+    public interface ICommand<E> where E : class, IEntity
     {
-        List<E> Select();
-        E Get();
+        IResult<List<E>> Select();
+        IResult<E> Get();
         IResult Create();
         IResult Delete();
         IResult Update();
