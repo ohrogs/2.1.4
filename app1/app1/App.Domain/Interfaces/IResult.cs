@@ -11,8 +11,12 @@ namespace App.Domain.Interfaces
     {
         ResultType State { get; }
         string Message { get; }
-
         public Exception Exception { get; }
 
+    }
+
+    public interface IResult<E>:IResult where E : class
+    {
+        public E Entity { get; }
     }
 }

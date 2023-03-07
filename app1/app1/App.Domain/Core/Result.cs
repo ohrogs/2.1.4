@@ -12,6 +12,7 @@ namespace App.Domain.Core
         public ResultType State { get; }
         public string Message { get; }
         public Exception Exception { get; }
+        public IEntity Entity { get; }
 
         public Result(ResultType state)
         {
@@ -23,12 +24,17 @@ namespace App.Domain.Core
             Message = message;
         }
 
+        public Result(ResultType state, IEntity entity) : this(state)
+        {
+            Entity = entity;
+        }
+
         public Result(ResultType state, Exception exception) : this(state)
         {
             Exception = exception;
         }
 
-        public Result(ResultType state, Exception exception, string message)
+        public Result(ResultType state, Exception exception, string message, IEntity entity)
         {
             if(state == ResultType.Undefined)
             {
@@ -37,6 +43,7 @@ namespace App.Domain.Core
             State = state;
             if(state == ResultType.Success) {
                 Message = message;
+                Entity = entity;
             }
             else if(String.IsNullOrEmpty(message) && exception == null) {
                 throw new InvalidOperationException("Message or Exception cannot be null");

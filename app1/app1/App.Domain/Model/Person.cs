@@ -37,40 +37,96 @@ namespace App.Domain.Model
         {
             using (var context = new Data.Model.Context())
             {
-                var ExtentionMethod = context.People.Select(p => new Person());
+                try
+                {
+                    if (ID == 0)
+                    {
+                        //return new Result(ResultType.Failure, "ID must be != 0");
+                        throw new KeyNotFoundException("Id must not be 0");
+                    }
+                    var ExtentionMethod = context.People.Select(p => new Person());
 
-                /*var QueryLang = from p in context.People
-                                where p.Id > 6
-                                select p;*/
+                    /*var QueryLang = from p in context.People
+                                    where p.Id > 6
+                                    select p;*/
 
-                return ExtentionMethod.ToList();
+                    return ExtentionMethod.ToList();
+
+                }
+                catch (Exception e)
+                {
+
+                    throw e;
+                }
             }
         }
-        public Person Get()
+        public IResult Get()
         {
             using (var context = new Data.Model.Context())
             {
-                var person = context.People.SingleOrDefault(p => p.ID == ID);
+                try
+                {
+                    var person = context.People.SingleOrDefault(p => p.ID == ID);
 
-                /*var QueryLang = from p in context.People
-                                where p.Id > 6
-                                select p;*/
+                    /*var QueryLang = from p in context.People
+                                    where p.Id > 6
+                                    select p;*/
 
-                return new Person(person);
+                    return new Result(ResultType.Success, new Person(person));
+
+                }
+                catch (Exception e)
+                {
+                    return new Result(ResultType.Error, e);
+                }
             }
+        }
+
+        private StringBuilder Check()
+        {
+            var messages = new StringBuilder();
+
+            if (String.IsNullOrWhiteSpace(this.Name))
+            {
+                messages.AppendLine("Name cant be null");
+            }
+            if (String.IsNullOrWhiteSpace(this.Surname))
+            {
+                messages.AppendLine("Surname cant be null");
+            }
+            if (String.IsNullOrWhiteSpace(this.Email))
+            {
+                messages.AppendLine("Email cant be null");
+            }
+            if (user == null)
+            {
+                messages.AppendLine("User cant be null");
+            }
+            if (String.IsNullOrWhiteSpace(user.Nickname))
+            {
+                messages.AppendLine("user Nickname cant be null");
+            }
+            if (String.IsNullOrWhiteSpace(user.Password))
+            {
+                messages.AppendLine("user Password cant be null");
+            }
+
+            return messages;
         }
         public IResult Create()
         {
             try
             {
-                if (user == null)
-                    return new Result(ResultType.Failure, "user cant be null");
                 using (var context = new Data.Model.Context())
                 {
-
+                    var messages = Check();
+                    if (messages.Length > 0) {
+                        return new Result(ResultType.Failure, messages.ToString()); 
+                    }
                     Data.Model.Person DtoPerson = new()
                     {
                         Name = this.Name,
+                        Surname = this.Surname,
                         Birthdate = this.Birthdate,
                         Cf = this.Cf,
                         Email = this.Email,
@@ -96,31 +152,64 @@ namespace App.Domain.Model
         }
         public IResult Update()
         {
-            using (var context = new Data.Model.Context())
+            try
             {
-                Data.Model.Person DtoPerson = context.People.Where(p => p.ID == ID).SingleOrDefault();
-                DtoPerson.Name = this.Name;
-                DtoPerson.Birthdate = this.Birthdate;
-                DtoPerson.Cf = this.Cf;
-                DtoPerson.Email = this.Email;
-                DtoPerson.Iduser = this.Iduser;
-                //DtoPerson.User = context.Users.Where(u => u.ID == this.Iduser).SingleOrDefault();
+                using (var context = new Data.Model.Context())
+                {
+                    var messages = Check();
+                    if (messages.Length > 0)
+                    {
+                        return new Result(ResultType.Failure, messages.ToString());
+                    }
+                    Data.Model.Person DtoPerson = context.People.Where(p => p.ID == ID).SingleOrDefault();
+                    DtoPerson.Name = this.Name;
+                    DtoPerson.Birthdate = this.Birthdate;
+                    DtoPerson.Cf = this.Cf;
+                    DtoPerson.Email = this.Email;
+                    DtoPerson.Iduser = this.Iduser;
+                    //DtoPerson.User = context.Users.Where(u => u.ID == this.Iduser).SingleOrDefault();
 
-                context.People.Update(DtoPerson);
-                context.SaveChanges();
+                    context.People.Update(DtoPerson);
+                    context.SaveChanges();
+                }
+                return new Result(ResultType.Success);
+
             }
-            throw new NotImplementedException();
+            catch (Exception e)
+            {
+
+                return new Result(ResultType.Error, e);
+            }
         }
         public IResult Delete()
         {
-            using (var context = new Data.Model.Context())
+            try
             {
-                Data.Model.Person DtoPerson = context.People.Where(p => p.ID == ID).SingleOrDefault();
+                using (var context = new Data.Model.Context())
+                {
+                    if(ID == 0)
+                    {
+                        return new Result(ResultType.Failure, "ID must be != 0");
+                    }
+                    Data.Model.Person DtoPerson = context.People.Where(p => p.ID == ID).SingleOrDefault();
 
-                context.People.Remove(DtoPerson);
-                context.SaveChanges();
+                    if (DtoPerson == null)
+                    {
+                        return new Result(ResultType.Undefined, "no user found with that id");
+                    }
+
+                    context.People.Remove(DtoPerson);
+                    context.SaveChanges();
+                    return new Result(ResultType.Success);
+
+                }
             }
-            throw new NotImplementedException();
+            catch (Exception e)
+            {
+
+                return new Result(ResultType.Error, e);
+            }
+            
         }
     }
 }

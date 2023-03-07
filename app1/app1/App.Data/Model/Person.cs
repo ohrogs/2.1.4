@@ -16,10 +16,13 @@ namespace App.Data.Model
         [Required]
         public int ID { get; set; }
         [Column("NAME")]
+        [Required]
         public string Name { get; set; }
         [Column("SURNAME")]
+        [Required]
         public string Surname { get; set; }
         [Column("BIRTHDATE")]
+        [Required]
         public DateTime? Birthdate { get; set; }
 
         [Column("CF")]
@@ -31,6 +34,7 @@ namespace App.Data.Model
         public string Email { get; set; }
 
         [Column("IDUSER")]
+        [Required]
         public int Iduser { get; set; }
 
         [ForeignKey(nameof(Iduser))]
