@@ -1,6 +1,8 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Cryptography.KeyDerivation;
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -8,6 +10,10 @@ namespace App.Domain.Security
 {
     public class PasswordManager : IPasswordManager
     {
+        const KeyDerivationPrf keyDerivationPrf = KeyDerivationPrf.HMACSHA1;
+        const int iterationCount = 10000;
+        const int nBytesRequested = 256 / 8;
+
         public PasswordManager() { }
 
         public HashedPassword Convert(PlainPassword password)
@@ -48,17 +54,71 @@ namespace App.Domain.Security
             return Hashed.Hash == LocalHashed.Hash || Hashed.Salt == LocalHashed.Salt;
         }
 
-        public HashedPassword Derive(PlainPassword password)
+        public HashedPassword? Derive(PlainPassword password)
         {
-            if (password.IsNull()) 
+            try
             {
-                throw new ArgumentNullException("password cant be null");
+                if (password.IsNull())
+                {
+                    throw new ArgumentNullException("password cant be null");
+                }
+                var salt = GenerateSalt();
+                return Derive(password, salt);
+
             }
-            return new HashedPassword()
+            catch (Exception e)
             {
-                Hash = password.Password.GetHashCode().ToString(),
-                Salt = "",
-            };
+
+                throw e;
+            }
+        }
+
+        public HashedPassword? Derive(PlainPassword password, string salt)
+        {
+            try
+            {
+                if (password.IsNull())
+                {
+                    throw new ArgumentNullException("password cant be null");
+                }
+                if (String.IsNullOrWhiteSpace(salt))
+                {
+                    throw new ArgumentNullException("salt cant be null");
+                }
+                return new HashedPassword()
+                {
+                    Hash = DeriveKey(password.Password, salt),
+                    Salt = salt,
+                };
+            }
+            catch (Exception e)
+            {
+
+                throw e;
+            }
+        }
+
+        string GenerateSalt()
+        {
+            byte[] salt = new byte[128 / 8];
+            using (var rng = RandomNumberGenerator.Create())
+            {
+                rng.GetBytes(salt);
+            }
+
+            return System.Convert.ToBase64String(salt);
+        }
+        string DeriveKey(string password, string salt)
+        {
+            return System.Convert.ToBase64String(
+                KeyDerivation.Pbkdf2(
+                password: password,
+                salt: Encoding.UTF8.GetBytes(salt),
+                prf: keyDerivationPrf,
+                iterationCount: iterationCount,
+                numBytesRequested: nBytesRequested
+                )
+            );
         }
     }
 }

@@ -17,12 +17,15 @@ namespace App.Domain.Model
 
         public string Password { get; set; }
 
+        internal string Salt { get; set; }
+
         public User() { }
 
         public User(Data.Model.User user)
         {
             ID = user.ID;
             Nickname = user.Nickname;
+            Salt = user.Salt;
         }
 
         public IResult<List<User>> Select()
@@ -31,7 +34,7 @@ namespace App.Domain.Model
             {
                 using (var context = new Data.Model.Context())
                 {
-                    var ExtentionMethod = context.Users.Select(u => new User(u));//needed for type conversion
+                    var ExtentionMethod = String.IsNullOrWhiteSpace(Nickname) ? context.Users.Select(u => new User(u)) : context.Users.Select(u => new User(u)).Where(usr => usr.Nickname == Nickname);//needed for type conversion
                     /*var QueryLang = from p in context.People
                                     where p.Id > 6
                                     select p;*/
