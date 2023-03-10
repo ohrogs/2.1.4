@@ -1,6 +1,7 @@
 ﻿using App.Data.Model;
 using App.Domain.Core;
 using App.Domain.Interfaces;
+using App.Domain.Security;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -81,7 +82,7 @@ namespace App.Domain.Model
                                     where p.Id > 6
                                     select p;*/
 
-                    if(person == null)
+                    if (person == null)
                     {
                         return new Result<Person>(ResultType.Failure, "no person found with that id");
                     }
@@ -134,9 +135,14 @@ namespace App.Domain.Model
                 using (var context = new Data.Model.Context())
                 {
                     var messages = Check();
-                    if (messages.Length > 0) {
-                        return new Result(ResultType.Failure, messages.ToString()); 
+                    var pswManager = new PasswordManager();
+                    if (messages.Length > 0)
+                    {
+                        return new Result(ResultType.Failure, messages.ToString());
                     }
+
+                    var hash = pswManager.Convert(new PlainPassword() { Password = this.user.Password });
+
                     Data.Model.Person DtoPerson = new()
                     {
                         Name = this.Name,
@@ -147,8 +153,8 @@ namespace App.Domain.Model
                         User = new Data.Model.User()
                         {
                             Nickname = this.user.Nickname,
-                            Salt = "gang3",
-                            Hash = "hash3",
+                            Salt = hash.Salt,
+                            Hash = hash.Hash,
                         }
                     };
 
@@ -171,11 +177,21 @@ namespace App.Domain.Model
                 using (var context = new Data.Model.Context())
                 {
                     var messages = Check();
+
+
                     if (messages.Length > 0)
                     {
                         return new Result(ResultType.Failure, messages.ToString());
                     }
                     Data.Model.Person DtoPerson = context.People.Where(p => p.ID == ID).SingleOrDefault();
+
+                    var pswManager = new PasswordManager();
+                    if (pswManager.Match(new PlainPassword() { Password = this.user.Password }, new HashedPassword() { Hash = DtoPerson.User.Hash, Salt = DtoPerson.User.Salt }))
+                    {
+                        messages.AppendLine("Hash or Salt match");
+                        return new Result(ResultType.Failure, messages.ToString());
+                    }
+
                     DtoPerson.Name = this.Name;
                     DtoPerson.Birthdate = this.Birthdate;
                     DtoPerson.Cf = this.Cf;
@@ -201,7 +217,7 @@ namespace App.Domain.Model
             {
                 using (var context = new Data.Model.Context())
                 {
-                    if(ID == 0)
+                    if (ID == 0)
                     {
                         return new Result(ResultType.Failure, "ID must be != 0");
                     }
@@ -223,7 +239,7 @@ namespace App.Domain.Model
 
                 return new Result(ResultType.Error, e);
             }
-            
+
         }
     }
 }

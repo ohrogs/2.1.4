@@ -1,5 +1,7 @@
-﻿using App.Domain.Core;
+﻿using App.Data.Model;
+using App.Domain.Core;
 using App.Domain.Interfaces;
+using App.Domain.Security;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -34,7 +36,7 @@ namespace App.Domain.Model
                                     where p.Id > 6
                                     select p;*/
 
-                    if(ExtentionMethod == null)
+                    if (ExtentionMethod == null)
                     {
                         return new Result<List<User>>(ResultType.Failure, "no bitches?");
                     }
@@ -71,33 +73,52 @@ namespace App.Domain.Model
         }
         public IResult Create()
         {
-            using (var context = new Data.Model.Context())
+            try
             {
-                Data.Model.User DtoUser = new Data.Model.User()
+                using (var context = new Data.Model.Context())
                 {
-                    Nickname = this.Nickname,
-                    Hash = "hash",
-                    Salt = "gang"
-                };
-                context.Users.Add(DtoUser);
-                context.SaveChanges();
+                    var pswManager = new PasswordManager();
+                    var hash = pswManager.Derive(new PlainPassword() { Password = this.Password });
+                    Data.Model.User DtoUser = new Data.Model.User()
+                    {
+                        Nickname = this.Nickname,
+                        Hash = hash.Hash,
+                        Salt = hash.Salt,
+                    };
+                    context.Users.Add(DtoUser);
+                    context.SaveChanges();
+                }
+                return new Result(ResultType.Success);
             }
-            throw new NotImplementedException();
+            catch (Exception e)
+            {
+
+                return new Result(ResultType.Failure, e);
+            }
         }
         public IResult Update()
         {
-            using (var context = new Data.Model.Context())
+            try
             {
-                Data.Model.User DtoUser = context.Users.Where(u => u.ID == ID).SingleOrDefault();
+                using (var context = new Data.Model.Context())
+                {
+                    Data.Model.User DtoUser = context.Users.Where(u => u.ID == ID).SingleOrDefault();
 
-                DtoUser.Nickname = this.Nickname;
-                DtoUser.Salt = "gang2";
-                DtoUser.Hash = "hash2";
+                    DtoUser.Nickname = this.Nickname;
+                    DtoUser.Salt = "gang2";
+                    DtoUser.Hash = "hash2";
 
-                context.Users.Update(DtoUser);
-                context.SaveChanges();
+                    context.Users.Update(DtoUser);
+                    context.SaveChanges();
+                }
+                throw new NotImplementedException();
+
             }
-            throw new NotImplementedException();
+            catch (Exception e)
+            {
+
+                return new Result(ResultType.Failure, e);
+            }
         }
         public IResult Delete()
         {
@@ -109,6 +130,22 @@ namespace App.Domain.Model
                 context.SaveChanges();
             }
             throw new NotImplementedException();
+        }
+
+        private StringBuilder Check()
+        {
+            var messages = new StringBuilder();
+
+            if (String.IsNullOrWhiteSpace(Nickname))
+            {
+                messages.AppendLine("user Nickname cant be null");
+            }
+            if (String.IsNullOrWhiteSpace(Password))
+            {
+                messages.AppendLine("user Password cant be null");
+            }
+
+            return messages;
         }
     }
 }
