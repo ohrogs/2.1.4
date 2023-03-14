@@ -1,3 +1,4 @@
+using App.WebAPI.Endpoints;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -21,5 +22,8 @@ app.MapGet("/api/people", () =>
 
 
 });
+
+app.Services.GetRequiredService<SecurityEndpoint>().DefineEndpoint(app);
+app.Services.GetRequiredService<ProfileEndpoint>().DefineEndpoint(app);
 
 app.Run();
