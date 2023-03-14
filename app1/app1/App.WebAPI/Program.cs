@@ -29,13 +29,43 @@ app.MapGet("/weatherforecast", () =>
     return forecast;
 });
 
-app.MapGet("/security/login", () =>
+app.MapGet("/security/login/", () =>
 {
     return "Santo Padre";
 
 });
 
-app.MapGet("/security/logout", () =>
+app.MapGet("/security/logout/", () =>
+{
+    return "Santo Padre";
+
+});
+
+app.MapGet("/profile/get/person/", () =>
+{
+    return "Santo Padre";
+
+});
+
+app.MapGet("/profile/create/person/", () =>
+{
+    return "Santo Padre";
+
+});
+
+app.MapGet("/profile/update/person/", () =>
+{
+    return "Santo Padre";
+
+});
+
+app.MapGet("/security/update/user/", () =>
+{
+    return "Santo Padre";
+
+});
+
+app.MapGet("/profile/delete/person/", () =>
 {
     return "Santo Padre";
 
