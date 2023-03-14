@@ -74,23 +74,21 @@ namespace App.Domain.Model
                 return new Result<User>(ResultType.Error, e);
             }
         }
-        public IResult Create()
+        public IResult Create(Data.Model.Context context)
         {
             try
             {
-                using (var context = new Data.Model.Context())
+
+                var pswManager = new PasswordManager();
+                var hash = pswManager.Derive(new PlainPassword() { Password = this.Password });
+                Data.Model.User DtoUser = new Data.Model.User()
                 {
-                    var pswManager = new PasswordManager();
-                    var hash = pswManager.Derive(new PlainPassword() { Password = this.Password });
-                    Data.Model.User DtoUser = new Data.Model.User()
-                    {
-                        Nickname = this.Nickname,
-                        Hash = hash.Hash,
-                        Salt = hash.Salt,
-                    };
-                    context.Users.Add(DtoUser);
-                    context.SaveChanges();
-                }
+                    Nickname = this.Nickname,
+                    Hash = hash.Hash,
+                    Salt = hash.Salt,
+                };
+                context.Users.Add(DtoUser);
+
                 return new Result(ResultType.Success);
             }
             catch (Exception e)

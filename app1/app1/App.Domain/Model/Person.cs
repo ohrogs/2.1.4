@@ -128,41 +128,40 @@ namespace App.Domain.Model
 
             return messages;
         }
-        public IResult Create()
+        public IResult Create(Data.Model.Context context)
         {
             try
             {
-                using (var context = new Data.Model.Context())
+
+                var messages = Check();
+                var pswManager = new PasswordManager();
+                if (messages.Length > 0)
                 {
-                    var messages = Check();
-                    var pswManager = new PasswordManager();
-                    if (messages.Length > 0)
-                    {
-                        return new Result(ResultType.Failure, messages.ToString());
-                    }
-
-                    var hash = pswManager.Convert(new PlainPassword() { Password = this.user.Password });
-
-                    Data.Model.Person DtoPerson = new()
-                    {
-                        Name = this.Name,
-                        Surname = this.Surname,
-                        Birthdate = this.Birthdate,
-                        Cf = this.Cf,
-                        Email = this.Email,
-                        User = new Data.Model.User()
-                        {
-                            Nickname = this.user.Nickname,
-                            Salt = hash.Salt,
-                            Hash = hash.Hash,
-                        }
-                    };
-
-                    context.People.Add(DtoPerson);
-
-                    context.SaveChanges();
-                    return new Result(ResultType.Success);
+                    return new Result(ResultType.Failure, messages.ToString());
                 }
+
+                var hash = pswManager.Convert(new PlainPassword() { Password = this.user.Password });
+
+                Data.Model.Person DtoPerson = new()
+                {
+                    Name = this.Name,
+                    Surname = this.Surname,
+                    Birthdate = this.Birthdate,
+                    Cf = this.Cf,
+                    Email = this.Email,
+                    User = new Data.Model.User()
+                    {
+                        Nickname = this.user.Nickname,
+                        Salt = hash.Salt,
+                        Hash = hash.Hash,
+                    }
+                };
+
+                context.People.Add(DtoPerson);
+
+
+                return new Result(ResultType.Success);
+
             }
             catch (Exception e)
             {

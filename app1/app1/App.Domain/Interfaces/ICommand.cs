@@ -10,7 +10,7 @@ namespace App.Domain.Interfaces
     {
         IResult<List<E>> Select();
         IResult<E> Get();
-        IResult Create();
+        IResult Create(Data.Model.Context context);
         IResult Delete();
         IResult Update();
     }

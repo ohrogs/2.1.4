@@ -5,7 +5,10 @@ using Microsoft.EntityFrameworkCore;
 var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddDbContext<App.Data.Model.Context>(options =>
-    options.UseSqlServer("ConnString")
+{
+    var connstring = builder.Configuration.GetConnectionString("ConnString");
+    options.UseSqlServer(connstring);
+}
 );
 builder.Services.AddSingleton<SecurityEndpoint>();
 builder.Services.AddSingleton<ProfileEndpoint>();
@@ -16,7 +19,7 @@ var app = builder.Build();
 
 app.MapGet("home", ([FromServices] App.Data.Model.Context context) =>
 {
-    return "Santo Padre";
+    return context.Database.GetConnectionString();
 
 });
 

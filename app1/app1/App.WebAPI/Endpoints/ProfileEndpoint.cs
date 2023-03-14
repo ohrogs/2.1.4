@@ -6,25 +6,30 @@ namespace App.WebAPI.Endpoints
     {
         public void Configure(WebApplication app)
         {
-            app.MapGet("/profile/get/person/", ([FromServices] App.Data.Model.Context context) =>
+            app.MapGet("/profile/", ([FromServices] App.Data.Model.Context context) =>
             {
                 return "Santo Padre";
 
             });
 
-            app.MapPost("/profile/create/person/", ([FromServices] App.Data.Model.Context context) =>
+            app.MapPost("/profile/", ([FromBody] App.Domain.Model.Person person, [FromServices] App.Data.Model.Context context) =>
+            {
+                var result = person.Create(context);
+                if (result.State == Domain.Core.ResultType.Success)
+                {
+                    context.SaveChanges();
+                }
+                return result.State;
+
+            });
+
+            app.MapPut("/profile/", ([FromServices] App.Data.Model.Context context) =>
             {
                 return "Santo Padre";
 
             });
 
-            app.MapPut("/profile/update/person/", ([FromServices] App.Data.Model.Context context) =>
-            {
-                return "Santo Padre";
-
-            });
-
-            app.MapDelete("/profile/delete/person/", ([FromServices] App.Data.Model.Context context) =>
+            app.MapDelete("/profile/", ([FromServices] App.Data.Model.Context context) =>
             {
                 return "Santo Padre";
 
