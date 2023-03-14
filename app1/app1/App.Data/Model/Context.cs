@@ -12,14 +12,24 @@ namespace App.Data.Model
         public DbSet<User> Users { get; set; }
         public DbSet<Person> People { get; set; }
 
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        public Context()
         {
-            var connString = "Server=localhost\\sql2019;Database=APP.DATABASE; User Id=APP.USER; Password=APP.PASSWORD; encrypt=false";
 
-            optionsBuilder.UseSqlServer(connString);
-
-            base.OnConfiguring(optionsBuilder);
         }
+
+        public Context(DbContextOptions<Context> options) : base(options)
+        {
+
+        }
+
+        //protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        //{
+        //    var connString = "Server=localhost\\sql2019;Database=APP.DATABASE; User Id=APP.USER; Password=APP.PASSWORD; encrypt=false";
+
+        //    optionsBuilder.UseSqlServer(connString);
+
+        //    base.OnConfiguring(optionsBuilder);
+        //}
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)//ing posso inserirmi nela creazione del model ed posso inserirmi dopo
         {
