@@ -2,7 +2,7 @@
 {
     public class ProfileEndpoint
     {
-        public void DefineEndpoint(WebApplication app)
+        public void Configure(WebApplication app)
         {
             app.MapGet("/profile/get/person/", () =>
             {

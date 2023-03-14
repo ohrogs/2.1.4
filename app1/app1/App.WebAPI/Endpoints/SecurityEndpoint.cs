@@ -7,7 +7,7 @@ namespace App.WebAPI.Endpoints
     {
 
 
-        public void DefineEndpoint(WebApplication app)
+        public void Configure(WebApplication app)
         {
             app.MapPost("/security/login/", () =>
             {

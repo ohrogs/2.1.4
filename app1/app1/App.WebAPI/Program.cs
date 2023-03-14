@@ -23,7 +23,7 @@ app.MapGet("/api/people", () =>
 
 });
 
-app.Services.GetRequiredService<SecurityEndpoint>().DefineEndpoint(app);
-app.Services.GetRequiredService<ProfileEndpoint>().DefineEndpoint(app);
+app.Services.GetRequiredService<SecurityEndpoint>().Configure(app);
+app.Services.GetRequiredService<ProfileEndpoint>().Configure(app);
 
 app.Run();
