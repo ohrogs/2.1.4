@@ -9,7 +9,7 @@ namespace App.Domain.Interfaces
     public interface ICommand<E> where E : class, IEntity
     {
         IResult<List<E>> Select();
-        IResult<E> Get();
+        IResult<E> Get(Data.Model.Context context);
         IResult Create(Data.Model.Context context);
         IResult Delete();
         IResult Update();

@@ -27,6 +27,7 @@ namespace App.Domain.Model
         public Person(Data.Model.Person person)
         {
             Name = person.Name;
+            Surname = person.Surname;
             Birthdate = person.Birthdate;
             Cf = person.Cf;
             Email = person.Email;
@@ -66,35 +67,35 @@ namespace App.Domain.Model
                 }
             }
         }
-        public IResult<Person> Get()
+        public IResult<Person> Get(Data.Model.Context context)
         {
-            using (var context = new Data.Model.Context())
+            
+            try
             {
-                try
+                if (ID == 0)
                 {
-                    if (ID == 0)
-                    {
-                        return new Result<Person>(ResultType.Failure, "id cant be 0");
-                    }
-                    var person = context.People.SingleOrDefault(p => p.ID == ID);
-
-                    /*var QueryLang = from p in context.People
-                                    where p.Id > 6
-                                    select p;*/
-
-                    if (person == null)
-                    {
-                        return new Result<Person>(ResultType.Failure, "no person found with that id");
-                    }
-
-                    return new Result<Person>(ResultType.Success, new Person(person));
-
+                    return new Result<Person>(ResultType.Failure, "id cant be 0");
                 }
-                catch (Exception e)
+                var person = context.People.SingleOrDefault(p => p.ID == ID);
+                person.User = context.Users.SingleOrDefault(u => u.ID == person.Iduser);
+
+                /*var QueryLang = from p in context.People
+                                where p.Id > 6
+                                select p;*/
+
+                if (person == null)
                 {
-                    return new Result<Person>(ResultType.Error, e);
+                    return new Result<Person>(ResultType.Failure, "no person found with that id");
                 }
+
+                return new Result<Person>(ResultType.Success, new Person(person));
+
             }
+            catch (Exception e)
+            {
+                return new Result<Person>(ResultType.Error, e);
+            }
+            
         }
 
         private StringBuilder Check()
@@ -158,6 +159,7 @@ namespace App.Domain.Model
                 };
 
                 context.People.Add(DtoPerson);
+                context.SaveChanges();
 
 
                 return new Result(ResultType.Success);

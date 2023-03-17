@@ -72,12 +72,12 @@ namespace App.Domain.Core
             {
                 return;
             }
-            if(Entity == null)
+
+            Entity = entity;
+            if (Entity == null)
             {
                 throw new ArgumentNullException(nameof(Entity));
             }
-
-            Entity = entity;
         }
 
 

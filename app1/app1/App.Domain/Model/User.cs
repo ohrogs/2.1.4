@@ -53,20 +53,19 @@ namespace App.Domain.Model
                 return new Result<List<User>>(ResultType.Error, e);
             }
         }
-        public IResult<User> Get()
+        public IResult<User> Get(Data.Model.Context context)
         {
             try
             {
-                using (var context = new Data.Model.Context())
-                {
-                    var user = context.Users.SingleOrDefault(u => u.ID == ID);
+                
+                var user = context.Users.SingleOrDefault(u => u.ID == ID);
 
-                    /*var QueryLang = from p in context.People
-                                    where p.Id > 6
-                                    select p;*/
+                /*var QueryLang = from p in context.People
+                                where p.Id > 6
+                                select p;*/
 
-                    return new Result<User>(ResultType.Success, user == null ? null : new User(user));
-                }
+                return new Result<User>(ResultType.Success, user == null ? null : new User(user));
+                
             }
             catch (Exception e)
             {
