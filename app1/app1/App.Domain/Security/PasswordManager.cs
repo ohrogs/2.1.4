@@ -28,7 +28,7 @@ namespace App.Domain.Security
 
         public bool Match(PlainPassword password, HashedPassword Hashed)
         {
-            var LocalHashed = Derive(password);
+            var LocalHashed = Derive(password, Hashed.Salt);
 
             /*if(Hashed.Hash != LocalHashed.Hash) 
             {

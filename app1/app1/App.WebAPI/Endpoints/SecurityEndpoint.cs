@@ -9,11 +9,10 @@ namespace App.WebAPI.Endpoints
 
         public void Configure(WebApplication app)
         {
-            app.MapPost("/security/", ([FromQuery] int IdUser, [FromServices] App.Data.Model.Context context) =>
+            app.MapPost("/security/", ([FromBody] Domain.Model.User user, [FromServices] App.Data.Model.Context context) =>
             {
                 Domain.Security.SessionManager session = new Domain.Security.SessionManager();
-                var user = context.Users.SingleOrDefault(u => u.ID == IdUser);
-                var res = session.Login(new Domain.Model.User(user), context);
+                var res = session.Login(user, context);
                 return res;
 
             });

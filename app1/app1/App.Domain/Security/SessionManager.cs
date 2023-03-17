@@ -29,7 +29,7 @@ namespace App.Domain.Security
                 if (u == null) { }
 
                 var pswManager = new PasswordManager();
-                PlainPassword uPsw = new PlainPassword { Password = u.Password };
+                PlainPassword uPsw = new PlainPassword { Password = user.Password };
                 HashedPassword? hashedPassword = pswManager.Derive(uPsw, u.Salt);
 
                 if (!pswManager.Match(new PlainPassword { Password = user.Password }, hashedPassword))
