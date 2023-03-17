@@ -9,15 +9,21 @@ namespace App.WebAPI.Endpoints
 
         public void Configure(WebApplication app)
         {
-            app.MapPost("/security/", ([FromServices] App.Data.Model.Context context) =>
+            app.MapPost("/security/", ([FromQuery] int IdUser, [FromServices] App.Data.Model.Context context) =>
             {
-                return "Santo Padre";
+                Domain.Security.SessionManager session = new Domain.Security.SessionManager();
+                var user = context.Users.SingleOrDefault(u => u.ID == IdUser);
+                var res = session.Login(new Domain.Model.User(user), context);
+                return res;
 
             });
 
-            app.MapGet("/security/", ([FromServices] App.Data.Model.Context context) =>
+            app.MapGet("/security/", ([FromQuery] int IdUser,[FromServices] App.Data.Model.Context context) =>
             {
-                return "Santo Padre";
+                Domain.Security.SessionManager session = new Domain.Security.SessionManager();
+                var user = context.Users.SingleOrDefault(u => u.ID == IdUser);
+                var res = session.Logout(new Domain.Model.User(user));
+                return res;
 
             });
 

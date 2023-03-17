@@ -10,7 +10,7 @@ namespace App.Domain.Security
 {
     public interface ISessionManager
     {
-        IResult<User> Login(User user);
+        IResult<User> Login(User user, Data.Model.Context context);
         IResult Logout(User user);
     }
 }

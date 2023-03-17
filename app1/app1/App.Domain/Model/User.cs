@@ -28,24 +28,31 @@ namespace App.Domain.Model
             Salt = user.Salt;
         }
 
-        public IResult<List<User>> Select()
+        public IResult<List<User>> Select(Data.Model.Context context)
         {
             try
             {
-                using (var context = new Data.Model.Context())
+
+                //var ExtentionMethod = String.IsNullOrWhiteSpace(Nickname) ? context.Users.Select(u => new User(u)) : context.Users.Select(u => new User(u)).Where(usr => usr.Nickname == Nickname);//needed for type conversion
+                /*var QueryLang = from p in context.People
+                                where p.Id > 6
+                                select p;*/
+                var query = context.Users.Select(u => u);
+                //var a = query.ToList();
+
+                if (query == null)
                 {
-                    var ExtentionMethod = String.IsNullOrWhiteSpace(Nickname) ? context.Users.Select(u => new User(u)) : context.Users.Select(u => new User(u)).Where(usr => usr.Nickname == Nickname);//needed for type conversion
-                    /*var QueryLang = from p in context.People
-                                    where p.Id > 6
-                                    select p;*/
-
-                    if (ExtentionMethod == null)
-                    {
-                        return new Result<List<User>>(ResultType.Failure, "no bitches?");
-                    }
-
-                    return new Result<List<User>>(ResultType.Success, ExtentionMethod.ToList());
+                    return new Result<List<User>>(ResultType.Failure, "no bitches?");
                 }
+
+                if (!string.IsNullOrWhiteSpace(this.Nickname))
+                {
+                    query = query.Where(u => u.Nickname == this.Nickname);
+                }
+                var a = query.Select(u=>new User(u)).ToList();
+
+                return new Result<List<User>>(ResultType.Success, a);
+                
             }
             catch (Exception e)
             {
@@ -96,21 +103,19 @@ namespace App.Domain.Model
                 return new Result(ResultType.Failure, e);
             }
         }
-        public IResult Update()
+        public IResult Update(Data.Model.Context context)
         {
             try
             {
-                using (var context = new Data.Model.Context())
-                {
-                    Data.Model.User DtoUser = context.Users.Where(u => u.ID == ID).SingleOrDefault();
+               
+                Data.Model.User DtoUser = context.Users.Where(u => u.ID == ID).SingleOrDefault();
 
-                    DtoUser.Nickname = this.Nickname;
-                    DtoUser.Salt = "gang2";
-                    DtoUser.Hash = "hash2";
+                DtoUser.Nickname = this.Nickname;
+                DtoUser.Salt = "gang2";
+                DtoUser.Hash = "hash2";
 
-                    context.Users.Update(DtoUser);
-                    context.SaveChanges();
-                }
+                context.Users.Update(DtoUser);
+                context.SaveChanges();
                 throw new NotImplementedException();
 
             }
@@ -120,15 +125,13 @@ namespace App.Domain.Model
                 return new Result(ResultType.Failure, e);
             }
         }
-        public IResult Delete()
+        public IResult Delete(Data.Model.Context context)
         {
-            using (var context = new Data.Model.Context())
-            {
-                Data.Model.User DtoUser = context.Users.Where(u => u.ID == ID).SingleOrDefault();
+            
+            Data.Model.User DtoUser = context.Users.Where(u => u.ID == ID).SingleOrDefault();
 
-                context.Users.Remove(DtoUser);
-                context.SaveChanges();
-            }
+            context.Users.Remove(DtoUser);
+            context.SaveChanges();
             throw new NotImplementedException();
         }
 

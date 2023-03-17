@@ -31,15 +31,26 @@ namespace App.WebAPI.Endpoints
 
             });
 
-            app.MapPut("/profile/", ([FromServices] App.Data.Model.Context context) =>
+            app.MapPut("/profile/", ([FromBody] App.Domain.Model.Person person, [FromServices] App.Data.Model.Context context) =>
             {
-                return "Santo Padre";
+                var ret = person.Update(context);
+                if (ret.State == Domain.Core.ResultType.Success)
+                {
+                    context.SaveChanges();
+                }
+                return ret;
 
             });
 
-            app.MapDelete("/profile/", ([FromServices] App.Data.Model.Context context) =>
+            app.MapDelete("/profile/", ([FromQuery]int id, [FromServices] App.Data.Model.Context context) =>
             {
-                return "Santo Padre";
+                //var z = context.People.SingleOrDefault(p => p.ID == id);
+                Domain.Model.Person person = new Domain.Model.Person()
+                {
+                    ID = id,
+                };
+                var res = person.Delete(context);
+                return res;
 
             });
 

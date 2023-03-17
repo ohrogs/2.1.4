@@ -11,11 +11,11 @@ namespace App.Domain.Security
 {
     public class SessionManager : ISessionManager
     {
-        public IResult<User> Login(User user)
+        public IResult<User> Login(User user, Data.Model.Context context)
         {
             try
             {
-                var gotUser = user.Select();
+                var gotUser = user.Select(context);
                 if (gotUser.Entity.Count() > 1)
                 {
                     return new Result<User>(ResultType.Failure, "multiple users found");
@@ -51,7 +51,7 @@ namespace App.Domain.Security
 
         public IResult Logout(User user)
         {
-            throw new NotImplementedException();
+            return new Result(ResultType.Success);
         }
     }
 }
