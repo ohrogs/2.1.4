@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using App.Domain;
+using App.Domain.Security;
+using Microsoft.AspNetCore.Mvc;
 
 namespace App.WebAPI.Endpoints
 {
@@ -11,7 +13,7 @@ namespace App.WebAPI.Endpoints
         {
             app.MapPost("/security/", ([FromBody] Domain.Model.User user, [FromServices] App.Data.Model.Context context) =>
             {
-                Domain.Security.SessionManager session = new Domain.Security.SessionManager();
+                SessionManager session = new Domain.Security.SessionManager();
                 var res = session.Login(user, context);
                 return res;
 
@@ -19,7 +21,7 @@ namespace App.WebAPI.Endpoints
 
             app.MapGet("/security/", ([FromQuery] int IdUser,[FromServices] App.Data.Model.Context context) =>
             {
-                Domain.Security.SessionManager session = new Domain.Security.SessionManager();
+                SessionManager session = new Domain.Security.SessionManager();
                 var user = context.Users.SingleOrDefault(u => u.ID == IdUser);
                 var res = session.Logout(new Domain.Model.User(user));
                 return res;
