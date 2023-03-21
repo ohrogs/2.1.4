@@ -1,4 +1,5 @@
-﻿using App.Data.Model;
+﻿using App.Context;
+using App.Data.Model;
 using App.Domain.Core;
 using App.Domain.Interfaces;
 using App.Domain.Security;
@@ -10,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace App.Domain.Model
 {
-    public class User : ICommand<User>, IEntity
+    public class User : ICommand<User>, IEntity, App.Context.IUser
     {
         public int ID { get; set; }
         public string Nickname { get; set; }

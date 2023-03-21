@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace App.Domain.Model
 {
-    public class Person : ICommand<Person>, IEntity
+    public class Person : ICommand<Person>, IEntity, App.Context.IPerson
     {
         public int ID { get; set; }
         public string Name { get; set; }
@@ -21,7 +21,7 @@ namespace App.Domain.Model
         public string Email { get; set; }
         public int Iduser { get; set; }
 
-        public User user { get; set; }
+        public App.Context.IUser user { get; set; }
 
         public Person() { }
 
