@@ -11,7 +11,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "App.WebAPI", "App.WebAPI\Ap
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "App.MAUI", "App.MAUI\App.MAUI.csproj", "{D28EB397-4DFB-4BE6-9718-7CF983B20ECF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "App.Test", "App.Test\App.Test.csproj", "{ABEE8633-0B5A-4930-83E0-0B3E96007713}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "App.Test", "App.Test\App.Test.csproj", "{ABEE8633-0B5A-4930-83E0-0B3E96007713}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "App.Context", "App.Context\App.Context.csproj", "{B2ABF757-A775-4F8A-B029-3E5077CB1CCE}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -41,6 +43,10 @@ Global
 		{ABEE8633-0B5A-4930-83E0-0B3E96007713}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{ABEE8633-0B5A-4930-83E0-0B3E96007713}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{ABEE8633-0B5A-4930-83E0-0B3E96007713}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B2ABF757-A775-4F8A-B029-3E5077CB1CCE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B2ABF757-A775-4F8A-B029-3E5077CB1CCE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B2ABF757-A775-4F8A-B029-3E5077CB1CCE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B2ABF757-A775-4F8A-B029-3E5077CB1CCE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

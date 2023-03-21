@@ -54,7 +54,20 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <ProjectReference Include="..\App.Context\App.Context.csproj" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Compile Update="Signup.xaml.cs">
+	    <DependentUpon>Signup.xaml</DependentUpon>
+	  </Compile>
+	</ItemGroup>
+
+	<ItemGroup>
 	  <MauiXaml Update="Login.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="Signup.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	</ItemGroup>

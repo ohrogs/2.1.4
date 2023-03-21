@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="App.MAUI.Signup"
+             Title="Signup">
+    <VerticalStackLayout>
+        <Image
+            Grid.RowSpan="2"
+            Aspect="AspectFill"
+            HorizontalOptions="Center"
+            Source="C:\Users\Mari Lorenzo\Documents\2.1.4\app1\app1\App.MAUI\Resources\Images\erzelli.jpg"
+            VerticalOptions="Center" 
+            WidthRequest="25"/>
+        <Label 
+            Text="MRBEAST!"
+            VerticalOptions="Center" 
+            HorizontalOptions="Center" />
+        <Entry x:Name="EntryNick" Placeholder="user"></Entry>
+        <Entry x:Name="EntryPassword" Placeholder="password"></Entry>
+        <Entry x:Name="EntryName" Placeholder="Name"></Entry>
+        <Entry x:Name="EntrySurname" Placeholder="Surname"></Entry>
+        <Entry x:Name="EntryCF" Placeholder="ae"></Entry>
+        <Button x:Name="btnSignUp" Clicked="btnSignUp_Clicked"></Button>
+    </VerticalStackLayout>
+</ContentPage>
