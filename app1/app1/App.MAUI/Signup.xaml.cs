@@ -45,7 +45,7 @@ public partial class Signup : ContentPage
         }
         using (var client = new HttpClient())
         {
-            var uri = "http:";
+            var uri = "http://localhost:5289/security/";
             var httpMessage = new HttpRequestMessage(HttpMethod.Post, uri);
         }
 
